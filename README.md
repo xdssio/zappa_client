@@ -24,7 +24,7 @@ client.invoke(function_name=<your-lambda-function-name>, path=<app-route-path>, 
 
 ## Zappa connection 
 ### Function name 
-In the zappa_settings.json file you have the *project_name* and the keys of the file are the "stages", which defines your functions to be `<project_name>-stage`
+In the zappa_settings.json file you have the *project_name* and the keys of the file are the "stages", which defines your functions to be `<project_name>-<stage>`
 Assuming you deployed the stage "dev" on  *project_name* "test", your function name will be automatically `test-dev`.
 You should use `test-dev` as your *function_name* param in the ZappaClient *invoke* function.
 
