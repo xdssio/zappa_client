@@ -1,6 +1,11 @@
 # Zappa client
 This is a tool to call [Zappa](https://github.com/Miserlou/Zappa) functions without APIGateway. 
 
+## Installation 
+```
+pip install zappa_client
+```
+ 
 # Basic Usage
 ```
 from zappa_client import ZappaClient
