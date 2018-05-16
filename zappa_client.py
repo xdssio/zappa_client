@@ -10,22 +10,23 @@ class ZappaClient:
     def __init__(self):
         self.client = boto3.client('lambda')
 
-    def invoke(self, function_name, path, data=default_body, http_method="GET"):
+    def invoke(self, function_name, path, data=default_body, http_method="GET", json_response=False):
         payload = self.get_payload(path=path, body=data, http_method=http_method)
-        return self.invoke_payload(function_name=function_name, payload=payload)
+        return self.invoke_payload(function_name=function_name, payload=payload, json_response=json_response)
 
-    def invoke_payload(self, function_name, payload):
+    def invoke_payload(self, function_name, payload, json_response=False):
         return self.parse_response(self.client.invoke(
             FunctionName=function_name,
             InvocationType='RequestResponse',
             LogType='Tail',
             Payload=payload,
-        ))
+        ), json_response=json_response)
 
     def get_payload(self, path, body=default_body, http_method="POST", headers=None):
         if not headers:
             headers = self.get_headers()
-
+        if type(body) == dict:
+            body = json.dumps(body)
         payload = {
             "body": body,
             "headers": headers,
@@ -48,17 +49,21 @@ class ZappaClient:
         return headers
 
     @staticmethod
-    def parse_response(response):
+    def parse_response(response, json_response=False):
         payload = response['Payload'].read()
         json_body = json.loads(payload.decode())
         body = json_body.get('body', None)
+
         ret = None
         if body:
             ret = base64.b64decode(body)
-            try:
-                ret = eval(ret)
-            except Exception as e:
-                raise ValueError(e)
+            if json_response:
+                try:
+                    ret = eval(ret)
+                except Exception as e:
+                    raise ValueError(e)
+            else:
+                ret = str(ret)
 
         return ret
 
