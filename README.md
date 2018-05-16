@@ -3,7 +3,7 @@ This is a tool to call [Zappa](https://github.com/Miserlou/Zappa) functions with
 
 ## Installation 
 ```
-pip install zappa_client
+pip install zappa-client
 ```
  
 # Basic Usage
